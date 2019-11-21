@@ -6,9 +6,9 @@ use \SoapClient;
 
 class Countries
 {
-
     private $allCountries = [];
     private $continents = [];
+    private $currencies = [];
 
     function __construct()
     {
@@ -23,6 +23,25 @@ class Countries
         }
 
         return $this->allCountries;
+    }
+
+
+    public function getAllCurrencies()
+    {
+        if(empty($this->currencies)) {
+            $result = $this->client->__soapCall('ListOfCurrenciesByCode', []);
+            $currencies = $result->ListOfCurrenciesByCodeResult->tCurrency ?? [];
+            foreach ($currencies as $currency) {
+                $this->currencies[(string) $currency->sISOCode] = (string) $currency->sName;
+            }
+        }
+
+        return $this->currencies;
+    }
+
+    public function getCurrencyByCode(string $currencyCode): string
+    {
+        return $this->getAllCurrencies()[$currencyCode] ?? '';
     }
 
     public function getAllContinents(): array
@@ -40,7 +59,7 @@ class Countries
 
     public function getContinentByCode(string $continentCode): string
     {
-        return $this->getAllContinents()[$continentCode];
+        return $this->getAllContinents()[$continentCode] ?? '';
     }
 
     public function searchCountries(string $searchValue): array
@@ -79,14 +98,6 @@ class Countries
         }));
     }
 
-    private function getCurrencyName(string $currencyCode): string
-    {
-        $params = array('sCurrencyISOCode'=> $currencyCode);
-        $response = $this->client->__soapCall('CurrencyName', [$params]);
-        $currency = $response->CurrencyNameResult ?? '';
-        return $currency;
-    }
-
     private function addFullDataToCountries(array $countries): array
     {
         return array_map(function($country) {
@@ -97,7 +108,7 @@ class Countries
     private function addFullDataToCountry($country)
     {
         $country->sContinentName = $this->getContinentByCode($country->sContinentCode);
-        $country->sCurrencyName = $this->getCurrencyName($country->sCurrencyISOCode);
+        $country->sCurrencyName = $this->getCurrencyByCode($country->sCurrencyISOCode);
 
         return $country;
     }

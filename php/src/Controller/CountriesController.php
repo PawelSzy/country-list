@@ -6,6 +6,8 @@ use App\Service\Countries;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class CountriesController extends AbstractController
 {
@@ -19,7 +21,11 @@ class CountriesController extends AbstractController
     public function countries($searchValue)
     {
         $result = $this->countries->searchCountries($searchValue);
-        return new JsonResponse((array)$result);
+
+        $response = new JsonResponse((array) $result);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        return $response;
     }
 
     /**
@@ -28,6 +34,10 @@ class CountriesController extends AbstractController
     public function listOfContinents()
     {
         $result = $this->countries->getAllContinents();
-        return new JsonResponse((array)$result);
+
+        $response = new JsonResponse((array) $result);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        return $response;
     }
 }

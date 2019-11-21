@@ -14,7 +14,7 @@ class CountriesController extends AbstractController
     }
 
     /**
-     * @Route("/countries", name="countries")
+     * @Route("/countries-by-name", name="countries-by-name")
      */
     public function index()
     {
@@ -22,6 +22,63 @@ class CountriesController extends AbstractController
         return new JsonResponse((array)$result);
     }
 
+    /**
+     * @Route("/countries/{searchValue}", name="countries")
+     */
+    public function countries($searchValue)
+    {
+
+        $result = $this->getAllCountries();
+        $result = $this->searchCountries($searchValue, $result);
+        return new JsonResponse((array)$result);
+    }
+
+    private function getAllCountries()
+    {
+        return $this->client->__soapCall('FullCountryInfoAllCountries', []);
+    }
+
+    private function searchCountries(string $searchValue, $listOfCountries)
+    {
+        $countries = $listOfCountries->FullCountryInfoAllCountriesResult->tCountryInfo;
+
+       return array_filter($countries, function($country) use ($searchValue) {
+            $isCountryCode = strtoupper($country->sISOCode) === strtoupper($searchValue);
+            $isCoountryName = strpos(strtoupper($country->sName), strtoupper($searchValue)) !== false;
+            $language = $searchValue;
+            $hasLanguage = $this->checkIfCountryHasLanguage($language, $country);
+            if($isCountryCode || $isCoountryName || $hasLanguage) {
+                return true;
+            }
+            return false;
+        });
+        return $listOfCountries;
+    }
+
+    private function checkIfCountryHasLanguage(string $language, $country)
+    {
+        if(!isset($country->Languages->tLanguage) || empty($country->Languages->tLanguage)) {
+            return false;
+        }
+        if(is_array($country->Languages->tLanguage)) {
+            $countryLanguages = $country->Languages->tLanguage;
+        } else {
+            $countryLanguages = [$country->Languages->tLanguage];
+        }
+
+        return !empty(array_filter($countryLanguages, function($countryLanguage) use ($language) {
+            return strtoupper($countryLanguage->sName) === strtoupper($language);
+        }));
+    }
+
+    /**
+     * @Route("/countries-full", name="countriesFull")
+     */
+    public function countriesFull()
+    {
+        $result = $this->client->__soapCall('FullCountryInfoAllCountries', []);
+        return new JsonResponse((array)$result);
+    }
 
     /**
      * @Route("/country/{sCountryISOCode}", name="country")
@@ -43,4 +100,21 @@ class CountriesController extends AbstractController
         return new JsonResponse((array)$result);
     }
 
+    /**
+     * @Route("/countries-by-code", name="countriesByCode")
+     */
+    public function countriesByCode()
+    {
+        $result = $this->client->__soapCall('ListOfCountryNamesByCode', []);
+        return new JsonResponse((array)$result);
+    }
+
+    /**
+     * @Route("/countries-by-name", name="countriesByName")
+     */
+    public function countriesByName()
+    {
+        $result = $this->client->__soapCall('ListOfCountryNamesByName', []);
+        return new JsonResponse((array)$result);
+    }
 }

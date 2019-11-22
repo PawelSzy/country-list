@@ -1,21 +1,22 @@
 import React from 'react'
 import {Table} from 'react-bootstrap';
+import './Countries.css'
 
 const countries = (props) => (
   <Table className="mx-auto countries striped bordered hover">
-    <thead>
+    <thead className="countries__head">
       <tr>
-        <th>Country Name</th>
-        <th>Capital</th>
-        <th>Continent</th>
-        <th>Currency</th>
-        <th>Languages</th>
-        <th>Flag</th>
+        <th className="countries__head__element" onClick={() => props.sortFunction('sName')} data-search="countryName">Country Name</th>
+        <th className="countries__head__element" onClick={() => props.sortFunction('sCapitalCity')} data-search="capital">Capital</th>
+        <th className="countries__head__element" onClick={() => props.sortFunction('sContinentName')} data-search="continent">Continent</th>
+        <th className="countries__head__element" onClick={() => props.sortFunction('sCurrencyName')} data-search="currency">Currency</th>
+        <th className="countries__head__element" data-search="language">Languages</th>
+        <th className="countries__head__element" data-search="flag">Flag</th>
       </tr>
     </thead>
     
     <tbody>
-      {Object.values(props.countries).map(country => (
+      {props.countries.map(country => (
        <tr>
          <td>{country.sName}</td>
          <td>{country.sCapitalCity}</td>

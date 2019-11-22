@@ -21,7 +21,13 @@ const countries = (props) => (
          <td>{country.sCapitalCity}</td>
          <td>{country.sContinentName}</td>
          <td>{country.sCurrencyName}</td>
-         <td>Languages</td>
+         <td>
+            {  Object.values(country.Languages.tLanguage).map(language => (
+               <div>{language.sName}</div>
+              ))
+            }
+
+         </td>
          <td><img src={country.sCountryFlag} /></td>
        </tr>
       ))}

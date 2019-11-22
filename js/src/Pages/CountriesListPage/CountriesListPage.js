@@ -8,7 +8,8 @@ class CountriesListPage extends Component {
   };
 
   componentDidMount() {
-    const url = `http://localhost:8080/countries/Korea`;
+    //const url = `http://localhost:8080/countries/Korea`;
+    const url = `http://localhost:8080/countries/Andorra`;
     axios.get(url, { crossdomain: true })
       .then(response => response.data)
       .then(data => {this.setState({ countries: data })

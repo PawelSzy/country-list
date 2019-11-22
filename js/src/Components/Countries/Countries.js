@@ -14,7 +14,7 @@ const countries = (props) => (
         <th className="countries__head__element" data-search="flag">Flag</th>
       </tr>
     </thead>
-    
+
     <tbody>
       {props.countries.map((country, countryIndex) => (
        <tr key={countryIndex}>
@@ -24,7 +24,7 @@ const countries = (props) => (
          <td>{country.sCurrencyName}</td>
          <td>
             {
-              !(country.Languages.tLanguage == null)
+              country.Languages.tLanguage
               ? Object.values(country.Languages.tLanguage).map((language, index) => (
                 <div key={index}>{language.sName}</div>
               ))

@@ -110,6 +110,10 @@ class Countries
         $country->sContinentName = $this->getContinentByCode($country->sContinentCode);
         $country->sCurrencyName = $this->getCurrencyByCode($country->sCurrencyISOCode);
 
+        if (is_object($country->Languages->tLanguage)) {
+            $country->Languages->tLanguage = [$country->Languages->tLanguage];
+        }
+
         return $country;
     }
 }

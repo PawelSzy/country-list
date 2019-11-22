@@ -23,9 +23,12 @@ const countries = (props) => (
          <td>{country.sContinentName}</td>
          <td>{country.sCurrencyName}</td>
          <td>
-            {  Object.values(country.Languages.tLanguage).map((language, index) => (
-               <div key={index}>{language.sName}</div>
+            {
+              !(country.Languages.tLanguage == null)
+              ? Object.values(country.Languages.tLanguage).map((language, index) => (
+                <div key={index}>{language.sName}</div>
               ))
+              : null
             }
 
          </td>

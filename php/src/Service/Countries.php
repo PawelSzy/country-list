@@ -68,11 +68,15 @@ class Countries
 
         $filteredCountries = array_filter($countries, function($country) use ($searchValue) {
             $isCountryCode = strtoupper($country->sISOCode) === strtoupper($searchValue);
-            $isCoountryName = strpos(strtoupper($country->sName), strtoupper($searchValue)) !== false;
+            if(strlen($searchValue) > 2) {
+                $isCountryName = strpos(strtoupper($country->sName), strtoupper($searchValue)) !== false;
+            } else {
+                $isCountryName = false;
+            }
             $language = $searchValue;
             $hasLanguage = $this->checkIfCountryHasLanguage($language, $country);
 
-            if($isCountryCode || $isCoountryName || $hasLanguage) {
+            if($isCountryCode || $isCountryName || $hasLanguage) {
                 return true;
             }
 
@@ -110,7 +114,8 @@ class Countries
         $country->sContinentName = $this->getContinentByCode($country->sContinentCode);
         $country->sCurrencyName = $this->getCurrencyByCode($country->sCurrencyISOCode);
 
-        if (is_object($country->Languages->tLanguage)) {
+        // Make the same format for one language of for list of languages.
+        if (isset($country->Languages->tLanguage) && is_object($country->Languages->tLanguage)) {
             $country->Languages->tLanguage = [$country->Languages->tLanguage];
         }
 

@@ -49,7 +49,7 @@ class CountriesListPage extends Component {
   }
 
   handleKeyUp = (event) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       this.setState({countries: []})
       this.getCountries();
     }
@@ -58,7 +58,7 @@ class CountriesListPage extends Component {
   render() {
     return (
       <div>
-        <h1>Countries</h1>
+        <h1 className="mt-4">Countries</h1>
         <Form.Control
           type="text"
           placeholder="Find country by name, code or language"

@@ -16,20 +16,20 @@ const countries = (props) => (
     </thead>
     
     <tbody>
-      {props.countries.map(country => (
-       <tr>
+      {props.countries.map((country, countryIndex) => (
+       <tr key={countryIndex}>
          <td>{country.sName}</td>
          <td>{country.sCapitalCity}</td>
          <td>{country.sContinentName}</td>
          <td>{country.sCurrencyName}</td>
          <td>
-            {  Object.values(country.Languages.tLanguage).map(language => (
-               <div>{language.sName}</div>
+            {  Object.values(country.Languages.tLanguage).map((language, index) => (
+               <div key={index}>{language.sName}</div>
               ))
             }
 
          </td>
-         <td><img src={country.sCountryFlag} /></td>
+         <td><img className="country__flag" src={country.sCountryFlag} alt="country-flag" /></td>
        </tr>
       ))}
   </tbody>

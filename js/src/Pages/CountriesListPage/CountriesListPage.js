@@ -30,6 +30,7 @@ class CountriesListPage extends Component {
 
   handleKeyUp = (event) => {
     if (event.keyCode == 13) {
+      this.setState({countries: []})
       this.getCountries();
     }
   }
